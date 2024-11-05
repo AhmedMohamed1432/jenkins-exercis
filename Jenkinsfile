@@ -8,14 +8,18 @@ pipeline {
     stages {
         stage('Requirements') {
             steps {
-                // No need for chmod on Windows, so this step is removed.
                 echo "Setting up environment for Windows build"
             }
         }
         stage('Build') {
             steps {
-                // Use bat to execute a Windows batch script
-                bat('./algorithm.bat')
+                // Run the algorithm script and output both to console and a file
+                bat '''
+                    @echo off
+                    echo Running the algorithm script
+                    ./algorithm.bat > output.txt
+                    type output.txt
+                '''
 
                 // Archive the report
                 archiveArtifacts(
