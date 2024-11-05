@@ -8,21 +8,22 @@ pipeline {
     stages {
         stage('Requirements') {
             steps {
-                // this step is required to make sure the script
-                // can be executed directly in a shell
-                bat('chmod +x ./algorithm.bat')
+                // No need for chmod on Windows, so this step is removed.
+                echo "Setting up environment for Windows build"
             }
         }
         stage('Build') {
             steps {
-                // the algorithm script creates a file named report.txt
-                sh('./algorithm.bat')
+                // Use bat to execute a Windows batch script
+                bat('./algorithm.bat')
 
-                // this step archives the report
-                archiveArtifacts allowEmptyArchive: true,
+                // Archive the report
+                archiveArtifacts(
+                    allowEmptyArchive: true,
                     artifacts: '*.txt',
                     fingerprint: true,
                     onlyIfSuccessful: true
+                )
             }
         }
     }
